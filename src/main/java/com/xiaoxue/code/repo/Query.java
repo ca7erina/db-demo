@@ -11,8 +11,13 @@ public class Query {
   public static final String EDIT_PERSON_QUERY =
       " UPDATE person SET firstName=:firstName, lastName=:lastName WHERE rowid=:id";
 
-  public static final String DELELE_PERSON_QUERY = "delete from person where rowid=:id";
-  public static final String GET_PERSONS_QUERY = "select rowid,firstName,lastName from person";
+  public static final String DELETE_PERSON_QUERY = "delete from person where rowid=:id";
+  public static final String GET_PERSONS_ADDRESS_QUERY =
+      "select person.rowid as personId, firstName, lastName, pA.addressId as addressId, street, city, state, postalCode\n"
+          + "from person\n"
+          + "         left join personAddress pA on person.rowid = pA.personId\n"
+          + "         left join address a on pA.addressId = a.rowid\n"
+          + "order by personId";
   public static final String COUNT_PERSONS_QUERY = "select count(*) from person";
 
   public static final String DROP_ADDRESS_TABLE_QUERY = "drop table if exists address;";
@@ -22,10 +27,10 @@ public class Query {
       "INSERT INTO address(street, city, state, postalCode) VALUES(:street, :city,:state,:postalCode)";
   public static final String EDIT_ADDRESS_QUERY =
       "UPDATE address SET street=:street, city=:city, state=:state, postalCode=:postalCode WHERE rowid=:id";
-  public static final String DELELE_ADDRESS_QUERY = "delete from address where rowid=:id";
+  public static final String DELETE_ADDRESS_QUERY = "delete from address where rowid=:id";
 
-
-  public static final String DROP_PERSON_ADDRESS_TABLE_QUERY = "drop table if exists personAddress;";
+  public static final String DROP_PERSON_ADDRESS_TABLE_QUERY =
+      "drop table if exists personAddress;";
   public static final String CREATE_PERSON_ADDRESS_TABLE_QUERY =
       "create table if not exists personAddress\n"
           + "(\n"

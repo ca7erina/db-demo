@@ -13,15 +13,15 @@ import static com.xiaoxue.code.repo.Query.ADD_ADDRESS_QUERY;
 import static com.xiaoxue.code.repo.Query.ADD_PERSON_ADDRESS_QUERY;
 import static com.xiaoxue.code.repo.Query.ADD_PERSON_QUERY;
 import static com.xiaoxue.code.repo.Query.COUNT_PERSONS_QUERY;
-import static com.xiaoxue.code.repo.Query.DELELE_ADDRESS_QUERY;
 import static com.xiaoxue.code.repo.Query.DELELE_PERSON_ADDRESS_QUERY;
-import static com.xiaoxue.code.repo.Query.DELELE_PERSON_QUERY;
+import static com.xiaoxue.code.repo.Query.DELETE_ADDRESS_QUERY;
+import static com.xiaoxue.code.repo.Query.DELETE_PERSON_QUERY;
 import static com.xiaoxue.code.repo.Query.EDIT_ADDRESS_QUERY;
 import static com.xiaoxue.code.repo.Query.EDIT_PERSON_QUERY;
-import static com.xiaoxue.code.repo.Query.GET_PERSONS_QUERY;
+import static com.xiaoxue.code.repo.Query.GET_PERSONS_ADDRESS_QUERY;
 
 import com.xiaoxue.code.entity.Person;
-import com.xiaoxue.code.repo.mapper.PersonRowMapper;
+import com.xiaoxue.code.repo.mapper.PersonsResultSetExtractor;
 
 import java.util.List;
 import java.util.Objects;
@@ -71,7 +71,7 @@ public class PersonRepositoryImpl implements PersonRepository {
   @Override
   public int deletePerson(final int id) {
     final MapSqlParameterSource params = new MapSqlParameterSource().addValue(ID_KEY, id);
-    return namedParameterJdbcTemplate.update(DELELE_PERSON_QUERY, params);
+    return namedParameterJdbcTemplate.update(DELETE_PERSON_QUERY, params);
   }
 
   @Override
@@ -81,7 +81,7 @@ public class PersonRepositoryImpl implements PersonRepository {
 
   @Override
   public List<Person> getAllPersons() {
-    return jdbcTemplate.query(GET_PERSONS_QUERY, new PersonRowMapper());
+    return jdbcTemplate.query(GET_PERSONS_ADDRESS_QUERY, new PersonsResultSetExtractor());
   }
 
   @Override
@@ -120,7 +120,7 @@ public class PersonRepositoryImpl implements PersonRepository {
   @Override
   public int deleteAddress(final int id) {
     final MapSqlParameterSource params = new MapSqlParameterSource().addValue(ID_KEY, id);
-    return namedParameterJdbcTemplate.update(DELELE_ADDRESS_QUERY, params);
+    return namedParameterJdbcTemplate.update(DELETE_ADDRESS_QUERY, params);
   }
 
   @Override

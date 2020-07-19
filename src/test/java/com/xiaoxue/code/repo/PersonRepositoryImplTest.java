@@ -2,6 +2,7 @@ package com.xiaoxue.code.repo;
 
 import static org.junit.Assert.assertEquals;
 
+import com.xiaoxue.code.entity.Address;
 import com.xiaoxue.code.entity.Person;
 
 import java.util.List;
@@ -61,8 +62,10 @@ public class PersonRepositoryImplTest extends SqliteTest {
 
   @Test
   public void test05AddAddress() {
-    assertEquals(ADDRESS_1_ID, personRepository.addAddress("Main Street", "Dublin", "Dublin", "D18"));
-    assertEquals(ADDRESS_2_ID, personRepository.addAddress("3rd Main Street", "Dublin", "Dublin", "D18"));
+    assertEquals(
+        ADDRESS_1_ID, personRepository.addAddress("Main Street", "Dublin", "Dublin", "D18"));
+    assertEquals(
+        ADDRESS_2_ID, personRepository.addAddress("3rd Main Street", "Dublin", "Dublin Co", "D1"));
   }
 
   @Test
@@ -70,7 +73,7 @@ public class PersonRepositoryImplTest extends SqliteTest {
     int affectedRowNumber = 1;
     assertEquals(
         affectedRowNumber,
-        personRepository.editAddress(1, "2 Main Street", "Dublin", "Dublin", "D18"));
+        personRepository.editAddress(1, "2 Main Street", "Dublin", "Dublin Co", "D2"));
   }
 
   @Test
@@ -83,5 +86,28 @@ public class PersonRepositoryImplTest extends SqliteTest {
   public void test08AddPersonAddress() {
     int affectedRowNumber = 1;
     assertEquals(affectedRowNumber, personRepository.addPersonAddress(2, 2));
+  }
+
+  @Test
+  public void test09GetAllPersonsWithAddresses() {
+    personRepository.addPerson("Homeless", "Lou");
+
+    List<Person> persons = personRepository.getAllPersons();
+    assertEquals(2, persons.size());
+
+    Person mary = persons.get(0);
+    assertEquals("Marry2", mary.getFirstName());
+    assertEquals("Lou2", mary.getLastName());
+    assertEquals(PERSON_2_ID, mary.getId());
+    Address address = mary.getAddresses().get(0);
+    assertEquals("3rd Main Street", address.getStreet());
+    assertEquals("Dublin", address.getCity());
+    assertEquals("Dublin Co", address.getState());
+    assertEquals("D1", address.getPostalCode());
+
+    Person homeless = persons.get(1);
+    assertEquals("Homeless", homeless.getFirstName());
+    assertEquals("Lou", homeless.getLastName());
+    assertEquals(0, homeless.getAddresses().size());
   }
 }

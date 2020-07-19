@@ -2,17 +2,19 @@ package com.xiaoxue.code;
 
 public class Constants {
 
-  public static String FIRSTNAME_KEY = "firstName";
-  public static String LASTNAME_KEY = "lastName";
+  private Constants() {}
 
-  public static String ID_KEY = "id";
-  public static String PERSON_ID_KEY = "personId";
-  public static String ADDRESS_ID_KEY = "addressId";
+  public static final String FIRSTNAME_KEY = "firstName";
+  public static final String LASTNAME_KEY = "lastName";
 
-  public static String STREET_KEY = "street";
-  public static String CITY_KEY = "city";
-  public static String STATE_KEY = "state";
-  public static String POSTAL_CODE_KEY = "postalCode";
+  public static final String ID_KEY = "id";
+  public static final String PERSON_ID_KEY = "personId";
+  public static final String ADDRESS_ID_KEY = "addressId";
 
-  public static String ROW_ID_KEY = "rowid";
+  public static final String STREET_KEY = "street";
+  public static final String CITY_KEY = "city";
+  public static final String STATE_KEY = "state";
+  public static final String POSTAL_CODE_KEY = "postalCode";
+
+  public static final String ROW_ID_KEY = "rowid";
 }

@@ -21,6 +21,26 @@ public class Address {
     this.id = id;
   }
 
+  public String getStreet() {
+    return street;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public String getPostalCode() {
+    return postalCode;
+  }
+
+  public int getId() {
+    return id;
+  }
+
   @Override
   public String toString() {
     return "Address{"
