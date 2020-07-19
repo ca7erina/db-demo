@@ -1,36 +1,41 @@
 package com.xiaoxue.code.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
-  private int id;
+  private Integer id;
   private final String firstName;
   private final String lastName;
   private List<Address> addresses;
 
   /** Constructor for Person. */
-  public Person(final int id, final String firstName, final String lastName) {
+  public Person(Integer id, final String firstName, final String lastName) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     addresses = new ArrayList<>();
   }
 
-  public Person(final String firstName, final String lastName) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-  }
-
+  /** Constructor. */
+  @JsonCreator
   public Person(
-      final int id, final String firstName, final String lastName, List<Address> addresses) {
+      @JsonProperty("id") Integer id,
+      @JsonProperty("firstName") final String firstName,
+      @JsonProperty("lastName") final String lastName,
+      @JsonProperty("addresses") List<Address> addresses) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.addresses = addresses;
   }
 
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
@@ -46,6 +51,14 @@ public class Person {
     return addresses;
   }
 
+  public void setId(final int id) {
+    this.id = id;
+  }
+
+  public void setAddresses(final List<Address> addresses) {
+    this.addresses = addresses;
+  }
+
   @Override
   public String toString() {
     return "Person{"
@@ -57,6 +70,8 @@ public class Person {
         + ", lastName='"
         + lastName
         + '\''
+        + ", addresses="
+        + addresses
         + '}';
   }
 }

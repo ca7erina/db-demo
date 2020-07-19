@@ -20,6 +20,7 @@ import static com.xiaoxue.code.repo.Query.EDIT_ADDRESS_QUERY;
 import static com.xiaoxue.code.repo.Query.EDIT_PERSON_QUERY;
 import static com.xiaoxue.code.repo.Query.GET_PERSONS_ADDRESS_QUERY;
 
+import com.xiaoxue.code.entity.Address;
 import com.xiaoxue.code.entity.Person;
 import com.xiaoxue.code.repo.mapper.PersonsResultSetExtractor;
 
@@ -28,37 +29,87 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.transaction.support.TransactionTemplate;
 
 public class PersonRepositoryImpl implements PersonRepository {
-
+  private static final Logger LOGGER = LoggerFactory.getLogger(PersonRepositoryImpl.class);
   JdbcTemplate jdbcTemplate;
   NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+  TransactionTemplate transaction;
 
+  /** Constructor. */
   @Inject
   public PersonRepositoryImpl(
-      JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+      JdbcTemplate jdbcTemplate,
+      NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+      TransactionTemplate transaction) {
     this.jdbcTemplate = jdbcTemplate;
+    this.transaction = transaction;
     this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
   }
 
   @Override
-  public int addPerson(final String firstName, final String lastName) {
-    final MapSqlParameterSource params =
-        new MapSqlParameterSource()
-            .addValue(FIRSTNAME_KEY, firstName)
-            .addValue(LASTNAME_KEY, lastName);
-    final KeyHolder keyHolder = new GeneratedKeyHolder();
-    namedParameterJdbcTemplate.update(ADD_PERSON_QUERY, params, keyHolder);
-    return Objects.requireNonNull(keyHolder.getKey()).intValue();
+  public int addPerson(Person person) {
+    String firstName = person.getFirstName();
+    String lastName = person.getLastName();
+    Objects.requireNonNull(firstName);
+    Objects.requireNonNull(lastName);
+    List<Address> addresses = person.getAddresses();
+    if (addresses.size() == 0) {
+      final MapSqlParameterSource params =
+          new MapSqlParameterSource()
+              .addValue(FIRSTNAME_KEY, firstName)
+              .addValue(LASTNAME_KEY, lastName);
+      final KeyHolder keyHolder = new GeneratedKeyHolder();
+      namedParameterJdbcTemplate.update(ADD_PERSON_QUERY, params, keyHolder);
+      return Objects.requireNonNull(keyHolder.getKey()).intValue();
+    } else {
+      // transaction add addresses and person
+      final KeyHolder keyHolder = new GeneratedKeyHolder();
+      return Objects.requireNonNull(
+          transaction.execute(
+              status -> {
+                try {
+
+                  final MapSqlParameterSource params =
+                      new MapSqlParameterSource()
+                          .addValue(FIRSTNAME_KEY, firstName)
+                          .addValue(LASTNAME_KEY, lastName);
+
+                  namedParameterJdbcTemplate.update(ADD_PERSON_QUERY, params, keyHolder);
+
+                  int personId = keyHolder.getKey().intValue();
+                  for (Address address : addresses) {
+                    int addressId = addAddress(address);
+                    addPersonAddress(personId, addressId);
+                  }
+                } catch (Exception e) {
+                  LOGGER.error("Add Person failed. {}", e.getMessage());
+                  status.setRollbackOnly();
+                }
+
+                return keyHolder.getKey().intValue();
+              }));
+    }
   }
 
   @Override
-  public int editPerson(final int id, final String firstName, final String lastName) {
+  public int editPerson(Person person) {
+    String firstName = person.getFirstName();
+    String lastName = person.getLastName();
+    Integer id = person.getId();
+
+    Objects.requireNonNull(firstName);
+    Objects.requireNonNull(lastName);
+    Objects.requireNonNull(id);
+
     final MapSqlParameterSource params =
         new MapSqlParameterSource()
             .addValue(FIRSTNAME_KEY, firstName)
@@ -85,8 +136,18 @@ public class PersonRepositoryImpl implements PersonRepository {
   }
 
   @Override
-  public int addAddress(
-      final String street, final String city, final String state, final String postalCode) {
+  public int addAddress(Address address) {
+
+    String street = address.getStreet();
+    String city = address.getCity();
+    String state = address.getState();
+    String postalCode = address.getPostalCode();
+
+    Objects.requireNonNull(street);
+    Objects.requireNonNull(city);
+    Objects.requireNonNull(state);
+    Objects.requireNonNull(postalCode);
+
     final MapSqlParameterSource params =
         new MapSqlParameterSource()
             .addValue(STREET_KEY, street)
@@ -100,12 +161,19 @@ public class PersonRepositoryImpl implements PersonRepository {
   }
 
   @Override
-  public int editAddress(
-      final int id,
-      final String street,
-      final String city,
-      final String state,
-      final String postalCode) {
+  public int editAddress(Address address) {
+
+    String street = address.getStreet();
+    String city = address.getCity();
+    String state = address.getState();
+    String postalCode = address.getPostalCode();
+    Integer id = address.getId();
+
+    Objects.requireNonNull(street);
+    Objects.requireNonNull(city);
+    Objects.requireNonNull(state);
+    Objects.requireNonNull(postalCode);
+    Objects.requireNonNull(id);
 
     final MapSqlParameterSource params =
         new MapSqlParameterSource()

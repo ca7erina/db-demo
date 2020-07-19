@@ -1,5 +1,9 @@
 package com.xiaoxue.code;
 
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Constants {
 
   private Constants() {}
@@ -17,4 +21,6 @@ public class Constants {
   public static final String POSTAL_CODE_KEY = "postalCode";
 
   public static final String ROW_ID_KEY = "rowid";
+
+  public static final ObjectMapper MAPPER = new ObjectMapper().disable(WRITE_DATES_AS_TIMESTAMPS);
 }

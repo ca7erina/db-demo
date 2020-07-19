@@ -42,7 +42,8 @@ public class PersonsResultSetExtractor implements ResultSetExtractor<List<Person
         String city = rs.getString(CITY_KEY);
         String state = rs.getString(STATE_KEY);
         String postalCode = rs.getString(POSTAL_CODE_KEY);
-        Address address = new Address(street, city, state, postalCode, addressId);
+
+        Address address = new Address(addressId,street, city, state, postalCode);
 
         if (persons.containsKey(personId)) {
           persons.get(personId).getAddresses().add(address);

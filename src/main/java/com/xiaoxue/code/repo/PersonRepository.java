@@ -1,14 +1,15 @@
 package com.xiaoxue.code.repo;
 
+import com.xiaoxue.code.entity.Address;
 import com.xiaoxue.code.entity.Person;
 
 import java.util.List;
 
 public interface PersonRepository {
 
-  int addPerson(final String firstName, final String lastName);
+  int addPerson(Person person);
 
-  int editPerson(int id, String firstName, String lastName);
+  int editPerson(Person person);
 
   int deletePerson(int id);
 
@@ -16,15 +17,13 @@ public interface PersonRepository {
 
   List<Person> getAllPersons();
 
-  int addAddress(String street, String city, String state, String postalCode);
+  int addAddress(Address address);
 
-  int editAddress(int id, String street, String city, String state, String postalCode);
+  int editAddress(Address address);
 
   int deleteAddress(int id);
 
   int addPersonAddress(int personId, int addressId);
 
   int deletePersonAddress(int personId, int addressId);
-
-
 }

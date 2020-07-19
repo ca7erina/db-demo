@@ -24,6 +24,9 @@ public class BasicModule extends AbstractModule {
         new NamedParameterJdbcTemplate(dataSource);
     binder().bind(NamedParameterJdbcTemplate.class).toInstance(namedParameterJdbcTemplate);
 
+    final TransactionTemplate transactionTemplate =
+        new TransactionTemplate(new DataSourceTransactionManager(dataSource));
+    binder().bind(TransactionTemplate.class).toInstance(transactionTemplate);
 
     binder().bind(PersonRepository.class).to(PersonRepositoryImpl.class).in(Scopes.SINGLETON);
   }

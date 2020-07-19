@@ -1,0 +1,18 @@
+{
+  "firstName":"Jack",
+  "lastName":"B",
+  "addresses":[
+    {
+      "street": "1st Main Street",
+      "city": "Dublin",
+      "state": "Co Dublin",
+      "postalCode": "D2"
+    },
+    {
+      "street": "2nd Low Street",
+      "city": "Dingle",
+      "state": "Co Kerry",
+      "postalCode": "D3"
+    }
+  ]
+}

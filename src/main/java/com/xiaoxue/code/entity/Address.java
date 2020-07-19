@@ -1,19 +1,38 @@
 package com.xiaoxue.code.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
   String street;
   String city;
   String state;
   String postalCode;
-  int id;
+  Integer id;
 
   /** Constructor for address. */
+  //  public Address(
+  //      final String street,
+  //      final String city,
+  //      final String state,
+  //      final String postalCode,
+  //      final Integer id) {
+  //    this.street = street;
+  //    this.city = city;
+  //    this.state = state;
+  //    this.postalCode = postalCode;
+  //    this.id = id;
+  //  }
+
+  @JsonCreator
   public Address(
-      final String street,
-      final String city,
-      final String state,
-      final String postalCode,
-      final int id) {
+      @JsonProperty("id") Integer id,
+      @JsonProperty("street") String street,
+      @JsonProperty("city") String city,
+      @JsonProperty("state") String state,
+      @JsonProperty("postalCode") String postalCode) {
     this.street = street;
     this.city = city;
     this.state = state;
@@ -37,8 +56,28 @@ public class Address {
     return postalCode;
   }
 
-  public int getId() {
+  public Integer getId() {
     return id;
+  }
+
+  public void setStreet(final String street) {
+    this.street = street;
+  }
+
+  public void setCity(final String city) {
+    this.city = city;
+  }
+
+  public void setState(final String state) {
+    this.state = state;
+  }
+
+  public void setPostalCode(final String postalCode) {
+    this.postalCode = postalCode;
+  }
+
+  public void setId(final Integer id) {
+    this.id = id;
   }
 
   @Override
