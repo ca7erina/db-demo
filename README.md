@@ -1,4 +1,4 @@
-# How to run the project
+# Demo Project
 
 ## How to Run
 
